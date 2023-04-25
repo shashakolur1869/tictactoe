@@ -1,0 +1,59 @@
+import numpy as np
+
+class TicTacToe:
+    def __init__(self):
+        self.board = np.zeros((3,3), dtype=int)
+        self.current_player = 1
+
+    def print_board(self):
+        print(self.board)
+
+    def make_move(self, row, col):
+        if self.board[row][col] != 0:
+            print("Invalid move! That position is already taken.")
+        else:
+            self.board[row][col] = self.current_player
+            self.current_player = -self.current_player
+
+    def check_winner(self):
+        for i in range(3):
+            # Check rows
+            if sum(self.board[i, :]) == 3:
+                return 1
+            elif sum(self.board[i, :]) == -3:
+                return -1
+            # Check columns
+            elif sum(self.board[:, i]) == 3:
+                return 1
+            elif sum(self.board[:, i]) == -3:
+                return -1
+        # Check diagonals
+        if sum(self.board.diagonal()) == 3 or sum(np.fliplr(self.board).diagonal()) == 3:
+            return 1
+        elif sum(self.board.diagonal()) == -3 or sum(np.fliplr(self.board).diagonal()) == -3:
+            return -1
+        # Check for tie
+        elif np.count_nonzero(self.board) == 9:
+            return 0
+        # Game is not over yet
+        else:
+            return None
+
+if __name__ == "__main__":
+    game = TicTacToe()
+    game.print_board()
+
+    while True:
+        print(f"Player {game.current_player}'s turn:")
+        row = int(input("Enter row number: "))
+        col = int(input("Enter column number: "))
+        game.make_move(row, col)
+        game.print_board()
+
+        winner = game.check_winner()
+        if winner is not None:
+            if winner == 0:
+                print("It's a tie!")
+            else:
+                print(f"Player {winner} wins!")
+            break
